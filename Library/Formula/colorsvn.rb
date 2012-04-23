@@ -68,3 +68,17 @@ index 84a3d97..54c2f74 100644
 -	$(RM) $(DESTDIR)/$(confdir)/profile.d/$(PROFFILE)
 +	$(RM) $(DESTDIR)/$(sysconfdir)/$(CONFIGFILE)  && \
 +	$(RM) $(DESTDIR)/$(sysconfdir)/profile.d/$(PROFFILE)
+
+diff --git a/colorsvn-original b/colorsvn-original
+index 01d7be3..5082c24 100644
+--- a/colorsvn-original
++++ b/colorsvn-original
+@@ -115,7 +115,7 @@ our %commandmap = ( "add" => ["add"],
+ 					);
+ 					
+ # never colorize this commands
+-our @preventcolor = ("commit", "help", "import", "lock", "switch", "propedit", "resolved", "revert", "unlock");
++our @preventcolor = ("commit", "help", "import", "lock", "switch", "propedit", "resolved", "revert", "unlock", "copy");
+ 					
+ #
+ # set default values
