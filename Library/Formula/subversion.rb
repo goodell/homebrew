@@ -36,6 +36,12 @@ class Subversion < Formula
 
   depends_on 'pkg-config' => :build
 
+  # really only when --perl is passed
+  fails_with :clang do
+    build 318
+    cause "core.c:1: error: bad value (native) for -march= switch"
+  end
+
   # If Subversion can use the Lion versions of these, please
   # open an issue with a patch. Build against Homebrewed versions
   # for consistency. - @adamv
@@ -113,16 +119,14 @@ class Subversion < Formula
         arches = "-arch x86_64"
       end
 
-      # Use version-appropriate system Perl
-     if MacOS.leopard?
-        perl_version = "5.8.8"
-      else
-        perl_version = "5.10.0"
+      perl_core = Pathname.new(`perl -MConfig -e 'print $Config{archlib}'`)+'CORE'
+      unless perl_core.exist?
+        onoe "perl CORE directory does not exist in '#{perl_core}'"
       end
 
       inreplace "Makefile" do |s|
         s.change_make_var! "SWIG_PL_INCLUDES",
-          "$(SWIG_INCLUDES) #{arches} -g -pipe -fno-common -DPERL_DARWIN -fno-strict-aliasing -I/usr/local/include -I/System/Library/Perl/#{perl_version}/darwin-thread-multi-2level/CORE"
+          "$(SWIG_INCLUDES) #{arches} -g -pipe -fno-common -DPERL_DARWIN -fno-strict-aliasing -I/usr/local/include -I#{perl_core}"
       end
       system "make swig-pl"
       system "make install-swig-pl"
